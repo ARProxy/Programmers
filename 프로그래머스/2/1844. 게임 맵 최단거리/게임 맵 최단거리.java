@@ -1,6 +1,7 @@
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.awt.*;
 
 class Solution {
     private static int n;
@@ -43,14 +44,5 @@ class Solution {
             }
         }
         return -1;
-    }
-
-    static class Point {
-        int x, y;
-
-        Point(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
     }
 }
