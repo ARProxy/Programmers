@@ -9,7 +9,7 @@ class Solution {
         fun lcm(a: Int, b: Int): Int {
             return a * b / gcd(a, b)
         }
-        
+        // 배열의 모든 수에 대해 최소 공배수 누적(재귀)
         return arr.reduce { acc, num -> lcm(acc, num) }
     }
 }
