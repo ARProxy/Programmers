@@ -1,12 +1,11 @@
 fun main() {
     val input = readln()
+    val groups = input.split("-")
+    var result = groups[0].split("+").sumOf { it.toInt() }
     
-    val parts = input.split("-")
-    
-    var result = parts[0].split("+").sumOf(String::toInt)
-    
-    for(i in 1..< parts.size) {
-        result -= parts[i].split("+").sumOf(String::toInt)
+    for (i in 1..< groups.size) {
+        result -= groups[i].split("+").sumOf { it.toInt() }
     }
+    
     println(result)
 }
