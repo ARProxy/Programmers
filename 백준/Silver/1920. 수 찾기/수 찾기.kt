@@ -4,8 +4,6 @@ fun main() {
     val m = readln().toInt()
     val mValues = readln().split(" ").map { it.toInt() }
 
-    println(mValues
-        .joinToString("\n") {
-            if (it in nValues) "1" else "0"
-    })
+    val result = mValues.map { if (it in nValues) "1" else "0" }
+    println(result.joinToString("\n"))
 }
