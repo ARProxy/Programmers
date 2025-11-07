@@ -1,11 +1,16 @@
+import java.io.BufferedReader
+import java.io.InputStreamReader
+
 fun main() {
-    val n = readln().toInt()
-    val budget = readln().split(" ").map { it.toInt() }
-    val sum = readln().toInt()
+    val br = BufferedReader(InputStreamReader(System.`in`))
+    
+    val n = br.readLine().toInt()
+    val budget = br.readLine().split(" ").map { it.toInt() }.toIntArray()
+    val sum = br.readLine().toInt()
     
     var upperLimit = budget.maxOf { it }
     
-    while(true) {
+    while (true) {
         val compareSum = budget.sumOf { it.coerceAtMost(upperLimit) }
         
         if (compareSum <= sum) break
