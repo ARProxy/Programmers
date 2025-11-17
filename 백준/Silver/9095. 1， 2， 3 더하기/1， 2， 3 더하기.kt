@@ -1,28 +1,17 @@
 fun main() {
     val t = readln().toInt()
+    val dp = IntArray(11)
+    
+    dp[1] = 1
+    dp[2] = 2
+    dp[3] = 4
+    
+    for (i in 4..10) {
+        dp[i] = dp[i - 1] + dp[i - 2] + dp[i - 3]
+    }
+    
     repeat(t) {
-        println(countWays(readln().toInt()))
+        val n = readln().toInt()
+        println(dp[n])
     }
-}
-
-fun countWays(n: Int): Int {
-    val ways = mutableListOf<List<Int>>()
-    
-    fun backtracking(remaining: Int, current: MutableList<Int>) {
-        if (remaining == 0) {
-            ways.add(current.toList())
-            return
-        }
-        
-        for (i in 1..3) {
-            if (remaining >= i) {
-                current.add(i)
-                backtracking(remaining - i, current)
-                current.removeLast()
-            }
-        }
-    }
-    
-    backtracking(n, mutableListOf())
-    return ways.size
 }
