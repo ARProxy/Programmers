@@ -2,33 +2,33 @@ fun main() {
     val n = readln().toInt()
     val m = readln().toInt()
     
-    val warm = mutableMapOf<Int, MutableList<Int>>()
+    val graph = mutableMapOf<Int, MutableList<Int>>()
     
-    for(i in 0..< m) {
-        val (a, b) = readln().split(" ").map(String::toInt)
-        warm.computeIfAbsent(a) { mutableListOf() }.add(b)
-        warm.computeIfAbsent(b) { mutableListOf() }.add(a)
+    for (i in 1..n) {
+        graph[i] = mutableListOf()
     }
     
-     val set = mutableSetOf<Int>()
-     set.add(1)
+    repeat(m) {
+        val (a, b) = readln().split(" ").map { it.toInt() }
+        graph[a]!!.add(b)
+        graph[b]!!.add(a)
+    }
     
-    val queue = ArrayDeque<Int>()
+    val visited = mutableSetOf<Int>()
+    val queue = mutableListOf<Int>()
+    
     queue.add(1)
+    visited.add(1)
     
-    var count = 0
-    
-    while(queue.isNotEmpty()) {
-        val key = queue.removeFirst()
-        val neighbors = warm.remove(key) ?: continue
+    while (queue.isNotEmpty()) {
+        val current = queue.removeAt(0)
         
-        for(i in neighbors) {
-            if(i !in set) {
-                set.add(i)
-                queue.add(i)
-                count++
-            }
-        }
+        graph[current]?.forEach { neighbor -> 
+                                if (neighbor !in visited) {
+                                    visited.add(neighbor)
+                                    queue.add(neighbor)
+                                }}
     }
-    println(count)
+    
+    println(visited.size - 1)
 }
