@@ -1,51 +1,49 @@
-import java.util.*
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.util.ArrayDeque
 
-fun main() {
-    val n = readln().toInt()
-    val query = readln().split(" ").map { it.toInt() }
-    val personA = query[0]
-    val personB = query[1]
-    val m = readln().toInt()
+fun main() = with(BufferedReader(InputStreamReader(System.`in`))) {
+    val n = readLine().toInt()
+    val (x, y) = readLine().split(" ").map { it.toInt() }
+    
+    val m = readLine().toInt()
     val graph = mutableMapOf<Int, MutableList<Int>>()
     
-    for( i in 1..n) {
-        graph[i] = mutableListOf()
-    }
-    
     repeat(m) {
-        val (parent, child) = readln().split(" ").map { it.toInt() }
-        graph[parent]?.add(child)
-        graph[child]?.add(parent)
+        val (a, b) = readLine().split(" ").map { it.toInt() }
+        graph.getOrPut(a) { mutableListOf() }.add(b)
+        graph.getOrPut(b) { mutableListOf() }.add(a)
     }
     
-    println(findRelation(graph, personA, personB, n))
-}
-
-fun findRelation(
-    graph:Map<Int, List<Int>>,
-    start: Int,
-    target: Int,
-    n: Int
-): Int {
-    val visited = BooleanArray(n + 1) { false }
-    val queue: Queue<Pair<Int, Int>> = LinkedList()
-    queue.add(Pair(start, 0))
-    visited[start] = true
+    val queue = ArrayDeque<Int>()
+    val visited = mutableSetOf<Int>()
     
-    while(queue.isNotEmpty()) {
-        val (current, distance) = queue.poll()
+    queue.add(x)
+    visited.add(x)
+    
+    var depth = 0
+    
+    while (queue.isNotEmpty()) {
+        val size = queue.size
         
-        if(current == target) {
-            return distance
-        }
-        
-        graph[current]?.forEach {
-            neighbor -> 
-            if(!visited[neighbor]) {
-                visited[neighbor] = true
-                queue.add(Pair(neighbor, distance + 1))
+        repeat(size) {
+            val current = queue.poll()
+            
+            if (current == y) {
+                println(depth)
+                return@with
+            }
+            
+            graph[current]?.forEach { next -> 
+                if (next !in visited) {
+                    visited.add(next)
+                    queue.add(next)
+                }
             }
         }
+        
+        depth++
     }
-    return -1
+    
+    println(-1)
 }
