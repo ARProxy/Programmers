@@ -1,55 +1,67 @@
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
 public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int T = sc.nextInt(); // 테스트 케이스 개수
-
-        for (int t = 0; t < T; t++) {
-            int width = sc.nextInt(); // 배추밭의 가로길이
-            int height = sc.nextInt(); // 배추밭의 세로길이
-            int k = sc.nextInt(); // 배추가 심어져 있는 위치의 개수
-            boolean[][] path = new boolean[width][height];
-
+    
+    static int m, n;
+    static int[][] map;
+    static boolean[][] visited;
+    static int[] dx = { -1, 1, 0, 0 };
+    static int[] dy = { 0, 0, -1, 1 };
+    
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
+        int t = Integer.parseInt(br.readLine().trim());
+        
+        while (t-- > 0) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            m = Integer.parseInt(st.nextToken());
+            n = Integer.parseInt(st.nextToken());
+            int k = Integer.parseInt(st.nextToken());
+            
+            map = new int[n][m];
+            visited = new boolean[n][m];
+            
             for (int i = 0; i < k; i++) {
-                int x = sc.nextInt(); // 배추의 X 좌표
-                int y = sc.nextInt(); // 배추의 Y 좌표
-                path[x][y] = true;
+                st = new StringTokenizer(br.readLine());
+                int x = Integer.parseInt(st.nextToken());
+                int y = Integer.parseInt(st.nextToken());
+                map[y][x] = 1;
+            }
+            
+            int count = 0;
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < m; j++) {
+                    if (map[i][j] == 1 && !visited[i][j]) {
+                        bfs(i, j);
+                        count++;
+                    }
+                }
             }
 
-            int graphCount = countGraphs(path, width, height);
-            System.out.println(graphCount);
+            sb.append(count).append('\n');
         }
-        sc.close();
+        
+        System.out.print(sb);
     }
+    
+    static void bfs(int sy, int sx) {
+        Queue<int[]> queue = new LinkedList<>();
+        queue.offer(new int[]{sy, sx});
+        visited[sy][sx] = true;
 
-    public static int countGraphs(boolean[][] path, int width, int height) {
-        int graphCount = 0;
-        boolean[][] visited = new boolean[width][height];
-
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                if (path[i][j] && !visited[i][j]) {
-                    dfs(path, visited, i, j);
-                    graphCount++;
+        while (!queue.isEmpty()) {
+            int[] cur = queue.poll();
+            for (int d = 0; d < 4; d++) {
+                int ny = cur[0] + dy[d];
+                int nx = cur[1] + dx[d];
+                if (ny >= 0 && ny < n && nx >= 0 && nx < m
+                        && !visited[ny][nx] && map[ny][nx] == 1) {
+                    visited[ny][nx] = true;
+                    queue.offer(new int[]{ny, nx});
                 }
             }
         }
-        return graphCount;
-    }
-
-    public static void dfs(boolean[][] path, boolean[][] visited, int i, int j) {
-        int width = path.length;
-        int height = path[0].length;
-
-        if (i < 0 || i >= width || j < 0 || j >= height || visited[i][j] || !path[i][j]) {
-            return;
-        }
-
-        visited[i][j] = true;
-        dfs(path, visited, i + 1, j);
-        dfs(path, visited, i - 1, j);
-        dfs(path, visited, i, j + 1);
-        dfs(path, visited, i, j - 1);
     }
 }
